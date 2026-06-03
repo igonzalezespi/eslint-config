@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>igonzalezespi/renovate-config"],
-  "baseBranches": ["main"],
+  "baseBranchPatterns": ["main"],
   "packageRules": [
     {
       "description": "No CI gate on this shared-config repo — open PRs for human review instead of automerging.",
