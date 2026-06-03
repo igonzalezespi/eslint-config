@@ -12,6 +12,9 @@ import baseConfig from '../base.mjs';
 const lintSnippet = async (code: string, filePath = 'src/example.ts'): Promise<string[]> => {
   const eslint = new ESLint({ overrideConfigFile: true, baseConfig: baseConfig as never });
   const [result] = await eslint.lintText(code, { filePath });
+  if (!result) {
+    throw new Error('ESLint.lintText returned no result for the linted snippet');
+  }
   return result.messages.map((m) => m.ruleId ?? '(fatal)');
 };
 

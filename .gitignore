@@ -4,6 +4,9 @@ coverage/
 .DS_Store
 .idea/
 .vscode/
-pnpm-lock.yaml
+
+# This repo standardizes on pnpm: its lockfile is committed (CI uses
+# --frozen-lockfile; Renovate lockFileMaintenance keeps it fresh).
+# Other package managers' lockfiles stay ignored to prevent drift.
 package-lock.json
 yarn.lock

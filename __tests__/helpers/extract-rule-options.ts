@@ -5,9 +5,12 @@
  */
 
 interface FlatConfigItem {
-  files?: string[];
+  // typescript-eslint's `ConfigArray` types `files` as `(string | string[])[]`:
+  // a nested-array entry means "match all of these globs at once" (AND semantics).
+  // We only ever query by a single string pattern, but the element type must stay
+  // wide enough to accept the real config array without an `as` cast at the call site.
+  files?: (string | string[])[];
   rules?: Record<string, unknown>;
-  [key: string]: unknown;
 }
 
 /** ESLint rule entry: severity string or [severity, ...options] tuple. */
