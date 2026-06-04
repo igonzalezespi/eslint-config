@@ -14,6 +14,11 @@ import prettier from 'eslint-config-prettier';
 export default [
   ...expo,
   {
+    // The `@typescript-eslint/*` rules must be scoped to TS files: eslint-config-expo
+    // registers the typescript-eslint plugin only on `**/*.{ts,tsx}`, so applying these
+    // rules to a non-TS file (e.g. `babel.config.js`, `metro.config.js`) makes ESLint
+    // fail config resolution with "could not find plugin @typescript-eslint".
+    files: ['**/*.ts', '**/*.tsx'],
     rules: {
       '@typescript-eslint/no-unused-vars': [
         'error',
@@ -22,7 +27,11 @@ export default [
       '@typescript-eslint/consistent-type-imports': [
         'error',
         { prefer: 'type-imports', fixStyle: 'inline-type-imports' }
-      ],
+      ]
+    }
+  },
+  {
+    rules: {
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       eqeqeq: ['error', 'always', { null: 'ignore' }]
     }
