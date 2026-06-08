@@ -78,11 +78,11 @@ export default [
 ## Studio context
 
 This package is part of the studio's **homogenize-projects** effort: shared
-config lives in small public repos consumed by git reference, so every product
-(`a private project`, `a private TS monorepo`, `a Flutter project`, `aca`) lints against one source of truth
-instead of drifting per-repo copies. It merges the previously-separate
-`a private TS monorepo` config (the richer ESLint 10 base: security + sonarjs + jsdoc, with
-rule-tester tests) and the `aca` config (the `expo` preset). The companion
+config lives in small public repos consumed by git reference, so every studio
+project lints against one source of truth instead of drifting per-repo copies.
+It merges the previously-separate base config (the richer ESLint 10 base:
+security + sonarjs + jsdoc, with rule-tester tests) and the `aca` config (the
+`expo` preset). The companion
 [`@studio/tsconfig`](https://github.com/igonzalezespi/tsconfig) does the same for
 TypeScript compiler options.
 
