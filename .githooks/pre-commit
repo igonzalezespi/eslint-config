@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+# Public repo — private-reference guard.
+#
+# Blocks any reference to a private project before it is committed. The denylist
+# is PRIVATE (it lives only in the maintainer's studio repo), so this guard is a
+# no-op off-studio — on a fork or any machine where ~/work is absent it exits 0
+# and lets the commit through. It carries no private names itself.
+#
+# Enable it per clone (it is not auto-installed — this repo has no node tooling):
+#   git config core.hooksPath .githooks
+set -eu
+
+GUARD="${STUDIO_ROOT:-$HOME/work}/security/check-private-refs.sh"
+if [ -x "$GUARD" ]; then
+  STAGED=$(git diff --cached --name-only --diff-filter=ACM)
+  [ -n "$STAGED" ] && "$GUARD" $STAGED
+fi
