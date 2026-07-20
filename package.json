@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@eslint/js": "^10.0.1",
-    "eslint-config-expo": "^56.0.4",
+    "eslint-config-expo": "^57.0.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsdoc": "^63.0.0",
     "eslint-plugin-security": "^4.0.0",
