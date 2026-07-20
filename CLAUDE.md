@@ -18,3 +18,20 @@ API — a rule change affects every consumer's lint.
 - **No secrets committed** — placeholders only.
 - **Tests are the contract.** `__tests__/` (vitest) pins the exported rules; run them before
   committing. A rule add/removal is a breaking change for consumers — prefer additive/opt-in.
+- **Agent guard.** A vendored `scripts/hooks/bash-guard.sh` is cabled as a PreToolUse Bash
+  hook in `.claude/settings.json`; it denies pushes to `main` and other forbidden actions and
+  enforces from its committed copy (no plugin required). `bootstrap.sh` refreshes and verifies
+  it; run `bash scripts/hooks/bash-guard.test.sh` after touching it.
+
+## Reserved to Ivan (escalate, do not decide)
+
+Breaking a public API (a config/rule change consumers depend on) · spend/cost · opening or
+renaming this repo · edits to this contract. When in doubt, escalate rather than guess.
+
+## Studio layer
+
+This repo declares the maintainer's plugins in `.claude/settings.json` (`core-dev`,
+`stack-node`, `studio-policy`) from the `ivan` marketplace. The shared **company-layer
+contract is injected at runtime by the `studio-policy` plugin** — it is not vendored here, so
+this file stays self-contained and neutral. Run `./bootstrap.sh` on a fresh clone or worktree
+to install the plugins and enable the guards (per-machine install is a separate step).
