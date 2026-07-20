@@ -11,7 +11,12 @@ API — a rule change affects every consumer's lint.
   against a private denylist; enable it per clone with `git config core.hooksPath .githooks`
   (it is a no-op where the denylist is absent, e.g. a fork). Not wired via a package `prepare`
   script on purpose — that would run in consumers' installs.
-- **English only** — code, docs, comments, commits.
+- **Language / Idioma** — Reply to the user (Ivan) in **Spanish**; he reads Spanish and this
+  holds in every repo and session. Author the OpenSpec docs the user reads — `proposal.md`,
+  `design.md`, `tasks.md` — in **Spanish** too. Everything else stays **English**: source
+  code, comments, identifiers, this contract file's own text, skills/SKILL.md, agent prompts,
+  and OpenSpec **spec deltas** (`specs/**/spec.md`, which keep their `SHALL` / `WHEN`/`THEN`
+  RFC2119 keyword format).
 - **Conventional Commits** — `type(scope): description` (`feat/fix/chore/docs/ci`).
 - **Branch flow: trunk → main.** PRs target `main`; keep them linear (rebase-and-merge). The
   only sanctioned force-push is `--force-with-lease` on your own PR branch.
