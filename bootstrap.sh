@@ -31,24 +31,40 @@ git config core.hooksPath .githooks
 echo "bootstrap: git hooks enabled (core.hooksPath=.githooks)"
 
 # --- 3. Refresh + verify the vendored guard (if core-dev is installed) -------
-SYNC=""
-VERIFY=""
-for base in \
-  "${CLAUDE_PLUGIN_ROOT:-}" \
-  "$HOME/.claude/plugins/cache/ivan/core-dev"; do
-  [ -n "$base" ] || continue
-  [ -z "$SYNC" ] && [ -x "$base/scripts/guard-sync.sh" ] && SYNC="$base/scripts/guard-sync.sh"
-  [ -z "$VERIFY" ] && [ -x "$base/scripts/guard-verify.sh" ] && VERIFY="$base/scripts/guard-verify.sh"
-done
+# The plugin cache keys every plugin by VERSION —
+# <cache>/<marketplace>/core-dev/<version>/scripts — so the version-less path
+# this used to probe matched nothing: both tools were always reported missing
+# and the step no-oped even with the plugin installed. Locate the script itself,
+# maintainer's marketplace first, newest version wins (deterministic when
+# several versions or several marketplaces coexist).
+find_core_dev_script() {
+  local name="$1" root hit
+  if [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && [ -f "${CLAUDE_PLUGIN_ROOT}/scripts/$name" ]; then
+    printf '%s' "${CLAUDE_PLUGIN_ROOT}/scripts/$name"
+    return 0
+  fi
+  for root in \
+    "$HOME/.claude/plugins/cache/ivan/core-dev" \
+    "$HOME/.claude/plugins/cache" \
+    "$HOME/.claude/plugins/marketplaces"; do
+    [ -d "$root" ] || continue
+    hit="$(find "$root" -type f -name "$name" -path '*core-dev*' 2>/dev/null | sort -V | tail -1)"
+    [ -n "$hit" ] && { printf '%s' "$hit"; return 0; }
+  done
+  return 1
+}
+
+SYNC="$(find_core_dev_script guard-sync.sh || true)"
+VERIFY="$(find_core_dev_script guard-verify.sh || true)"
 
 if [ -n "$SYNC" ]; then
-  "$SYNC" --repo "$ROOT"
+  bash "$SYNC" --repo "$ROOT"
 else
   echo "bootstrap: core-dev/guard-sync not found (plugin not installed) — the vendored guard in scripts/hooks/ still enforces; run /guard-sync after installing core-dev to refresh it." >&2
 fi
 
 if [ -n "$VERIFY" ]; then
-  "$VERIFY" --repo "$ROOT"
+  bash "$VERIFY" --repo "$ROOT"
 else
   echo "bootstrap: core-dev/guard-verify not found — running the vendored self-test instead." >&2
   bash scripts/hooks/bash-guard.test.sh
