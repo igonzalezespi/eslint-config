@@ -21,10 +21,19 @@
 # A best-effort firewall against agent mistakes, not hermetic: obfuscated forms
 # — `bash -c "..."`, git aliases, `git -c ...`, variable expansion ($CMD),
 # intermediate scripts, quoted text the simple tokenizer does not interpret,
-# exotic chaining — are NOT guaranteed to be intercepted. The authoritative
-# protection is server-side (GitHub branch protection, repo permissions). The
-# guard is also fail-open: if command extraction fails (node absent, malformed
-# JSON), it allows — a broken tripwire must not take down the harness.
+# exotic chaining — are NOT guaranteed to be intercepted. The guard is also
+# fail-open: if command extraction fails (node absent, malformed JSON), it
+# allows — a broken tripwire must not take down the harness.
+#
+# And there is NO server-side backstop behind it. The consuming repos have no
+# branch protection and no required status checks (measured across the fleet:
+# `branches/<ref>/protection` -> 404 and `rulesets` -> [] nearly everywhere; the
+# one existing ruleset only blocks deletion/force-push and does not gate on CI)
+# — a deliberate standing decision, not an oversight. So when this guard misses
+# something, what is left is: the local git hooks (pre-commit / commit-msg /
+# pre-push), a CI that REPORTS without blocking (no required checks -> a red run
+# does not stop a merge), and human review. Treat an escape here as a real
+# escape; nothing on the server is going to catch it.
 #
 # BASH_GUARD_BRANCH: override of the current branch, TEST-ONLY (bash-guard.test.sh)
 # — lets the suite simulate "on main"/"on a PR branch" deterministically. In
